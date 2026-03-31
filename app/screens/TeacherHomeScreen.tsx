@@ -38,12 +38,11 @@ export const TeacherHomeScreen = ({ navigation }: Props) => {
         <View style={styles.headerActions}>
           <ThemeToggle />
           <Pressable onPress={() => navigation.navigate("ChatList")} style={styles.chatButton}>
-            <Feather name="message-circle" size={14} color={colors.text} />
-            <Text style={styles.chatButtonText}>Messages</Text>
+            <Feather name="message-circle" size={16} color={colors.text} />
           </Pressable>
         </View>
       </View>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
             <Text style={styles.statLabel}>Sessions</Text>
@@ -111,18 +110,13 @@ const createStyles = (colors: {
     chatButton: {
       backgroundColor: colors.card,
       borderRadius: 14,
-      paddingHorizontal: spacing.md,
+      paddingHorizontal: spacing.sm,
       paddingVertical: spacing.sm,
       borderWidth: 1,
       borderColor: colors.border,
       flexDirection: "row",
       alignItems: "center",
       gap: spacing.xs
-    },
-    chatButtonText: {
-      color: colors.text,
-      fontSize: 13,
-      fontFamily: typography.fontFamilyBold
     },
     scrollContent: {
       paddingBottom: spacing.xl

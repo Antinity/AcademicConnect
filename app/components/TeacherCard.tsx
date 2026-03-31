@@ -35,8 +35,12 @@ export const TeacherCard = ({ teacher, onPress }: TeacherCardProps) => {
       <Animated.View style={{ transform: [{ scale }] }}>
         <View style={styles.headerRow}>
           <View>
-            <Text style={styles.name}>{teacher.name}</Text>
-            <Text style={styles.title}>{teacher.title}</Text>
+            <Text style={styles.name} numberOfLines={1}>
+              {teacher.name}
+            </Text>
+            <Text style={styles.title} numberOfLines={1}>
+              {teacher.title}
+            </Text>
           </View>
           <View style={styles.rateBox}>
             <Feather name="clock" size={12} color={colors.muted} />

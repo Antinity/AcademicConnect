@@ -39,7 +39,7 @@ export const TeacherProfileScreen = ({ route, navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.headerRow}>
           <Text style={styles.headerLabel}>Profile overview</Text>
           <ThemeToggle />

@@ -51,8 +51,7 @@ export const StudentHomeScreen = ({ navigation }: Props) => {
         <View style={styles.headerActions}>
           <ThemeToggle />
           <Pressable onPress={() => navigation.navigate("ChatList")} style={styles.chatButton}>
-            <Feather name="message-circle" size={14} color={colors.text} />
-            <Text style={styles.chatButtonText}>Chats</Text>
+            <Feather name="message-circle" size={16} color={colors.text} />
           </Pressable>
         </View>
       </View>
@@ -101,6 +100,7 @@ export const StudentHomeScreen = ({ navigation }: Props) => {
         data={filtered}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <TeacherCard
             teacher={item}
@@ -151,18 +151,13 @@ const createStyles = (colors: {
     chatButton: {
       backgroundColor: colors.card,
       borderRadius: 14,
-      paddingHorizontal: spacing.md,
+      paddingHorizontal: spacing.sm,
       paddingVertical: spacing.sm,
       borderWidth: 1,
       borderColor: colors.border,
       flexDirection: "row",
       alignItems: "center",
       gap: spacing.xs
-    },
-    chatButtonText: {
-      color: colors.text,
-      fontSize: 13,
-      fontFamily: typography.fontFamilyBold
     },
     quickRow: {
       flexDirection: "row",

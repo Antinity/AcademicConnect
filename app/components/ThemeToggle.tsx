@@ -1,5 +1,5 @@
-import React from "react";
-import { Pressable, StyleSheet } from "react-native";
+import React, { useEffect } from "react";
+import { LayoutAnimation, Platform, Pressable, StyleSheet, UIManager } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useAppStore } from "../store/useAppStore";
 import { useThemeColors } from "../theme/useTheme";
@@ -10,9 +10,18 @@ export const ThemeToggle = () => {
   const mode = useAppStore((state) => state.themeMode);
   const toggleTheme = useAppStore((state) => state.toggleTheme);
 
+  useEffect(() => {
+    if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+  }, []);
+
   return (
     <Pressable
-      onPress={toggleTheme}
+      onPress={() => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        toggleTheme();
+      }}
       style={({ pressed }) => [
         styles.button,
         { backgroundColor: colors.card, borderColor: colors.border },

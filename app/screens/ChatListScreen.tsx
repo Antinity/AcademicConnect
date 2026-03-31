@@ -47,6 +47,7 @@ export const ChatListScreen = ({ navigation }: Props) => {
         data={filtered}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
         ListEmptyComponent={<Text style={styles.empty}>No conversations yet.</Text>}
         renderItem={({ item }) => {
           const otherId = item.participantIds.find((id) => id !== user?.id) || "";
