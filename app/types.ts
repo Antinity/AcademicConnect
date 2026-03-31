@@ -44,3 +44,17 @@ export interface UserSession {
   name: string;
   role: Role;
 }
+
+export interface OnboardingProfile {
+  name: string;
+  role: Role;
+  headline?: string;
+  location?: string;
+  bio?: string;
+  subjects?: string[];
+  hourlyRate?: number;
+  gradeLevel?: string;
+  goals?: string;
+  institutionName?: string;
+  hiringFocus?: string;
+}

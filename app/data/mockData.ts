@@ -8,7 +8,7 @@ export const teachers: Teacher[] = [
     subjects: ["Algebra", "Calculus", "Statistics"],
     rating: 4.8,
     hourlyRate: 45,
-    bio: "Patient tutor focused on building confidence, exam strategy, and steady progress.",
+    bio: "Patient, clear explanations, steady progress.",
     reviews: [
       {
         id: "review_1",
@@ -33,7 +33,7 @@ export const teachers: Teacher[] = [
     subjects: ["Programming", "Data Structures", "Algorithms"],
     rating: 4.7,
     hourlyRate: 55,
-    bio: "Hands-on sessions that blend theory with practical projects.",
+    bio: "Hands-on sessions with practical projects.",
     reviews: [
       {
         id: "review_3",
@@ -51,7 +51,7 @@ export const teachers: Teacher[] = [
     subjects: ["Mechanics", "Electricity", "Waves"],
     rating: 4.6,
     hourlyRate: 48,
-    bio: "Focused on intuition and problem-solving under pressure.",
+    bio: "Intuition-first problem solving.",
     reviews: [
       {
         id: "review_4",
@@ -69,7 +69,7 @@ export const teachers: Teacher[] = [
     subjects: ["Essay Writing", "Literature", "Editing"],
     rating: 4.9,
     hourlyRate: 50,
-    bio: "Supports students with structure, voice, and polished drafts.",
+    bio: "Structure and polished writing support.",
     reviews: [
       {
         id: "review_5",
@@ -87,7 +87,7 @@ export const teachers: Teacher[] = [
     subjects: ["Organic Chemistry", "Lab Reports", "Stoichiometry"],
     rating: 4.5,
     hourlyRate: 46,
-    bio: "Balanced approach with problem drills and conceptual checks.",
+    bio: "Balanced drills and concept checks.",
     reviews: [
       {
         id: "review_6",

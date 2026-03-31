@@ -13,6 +13,7 @@ import { ThemeToggle } from "../components/ThemeToggle";
 export const AuthScreen = () => {
   const [role, setRole] = useState<Role | null>(null);
   const [name, setName] = useState("");
+  const [error, setError] = useState("");
   const login = useAppStore((state) => state.login);
   const colors = useThemeColors();
   const styles = createStyles(colors);
@@ -21,6 +22,11 @@ export const AuthScreen = () => {
     if (!role) {
       return;
     }
+    if (!name.trim()) {
+      setError("Please enter your name.");
+      return;
+    }
+    setError("");
     login(name, role);
   };
 
@@ -40,24 +46,25 @@ export const AuthScreen = () => {
         placeholderTextColor={colors.muted}
         style={styles.input}
       />
+      {error ? <Text style={styles.error}>{error}</Text> : null}
       <RoleCard
         role="student"
         title="Student"
-        description="Browse teachers and book sessions."
+        description="Find the right teacher fast."
         selected={role === "student"}
         onPress={() => setRole("student")}
       />
       <RoleCard
         role="teacher"
         title="Teacher"
-        description="Manage your profile and respond to requests."
+        description="Share your profile and availability."
         selected={role === "teacher"}
         onPress={() => setRole("teacher")}
       />
       <RoleCard
         role="school"
         title="School"
-        description="Search teachers and build your roster."
+        description="Build a reliable teacher roster."
         selected={role === "school"}
         onPress={() => setRole("school")}
       />
@@ -89,7 +96,7 @@ const createStyles = (colors: {
     },
     header: {
       marginBottom: spacing.lg,
-      paddingTop: spacing.xl,
+      paddingTop: spacing.lg,
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center"
@@ -111,8 +118,12 @@ const createStyles = (colors: {
       borderColor: colors.border,
       paddingHorizontal: spacing.md,
       paddingVertical: spacing.sm,
-      marginBottom: spacing.md,
+      marginBottom: spacing.sm,
       color: colors.text
+    },
+    error: {
+      color: "#D9534F",
+      marginBottom: spacing.sm
     },
     button: {
       marginTop: spacing.sm,

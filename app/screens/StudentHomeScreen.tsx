@@ -73,29 +73,6 @@ export const StudentHomeScreen = ({ navigation }: Props) => {
           </Pressable>
         ))}
       </View>
-      <View style={styles.quickRow}>
-        <View style={styles.quickCard}>
-          <View style={styles.quickHeader}>
-            <Feather name="bookmark" size={14} color={colors.muted} />
-            <Text style={styles.quickLabel}>Saved</Text>
-          </View>
-          <Text style={styles.quickValue}>8</Text>
-        </View>
-        <View style={styles.quickCard}>
-          <View style={styles.quickHeader}>
-            <Feather name="calendar" size={14} color={colors.muted} />
-            <Text style={styles.quickLabel}>Upcoming</Text>
-          </View>
-          <Text style={styles.quickValue}>2</Text>
-        </View>
-        <View style={styles.quickCard}>
-          <View style={styles.quickHeader}>
-            <Feather name="inbox" size={14} color={colors.muted} />
-            <Text style={styles.quickLabel}>Requests</Text>
-          </View>
-          <Text style={styles.quickValue}>3</Text>
-        </View>
-      </View>
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
@@ -127,8 +104,8 @@ const createStyles = (colors: {
       paddingHorizontal: spacing.lg
     },
     header: {
-      paddingTop: spacing.xl,
-      paddingBottom: spacing.md,
+      paddingTop: spacing.lg,
+      paddingBottom: spacing.sm,
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center"
@@ -159,11 +136,6 @@ const createStyles = (colors: {
       alignItems: "center",
       gap: spacing.xs
     },
-    quickRow: {
-      flexDirection: "row",
-      gap: spacing.sm,
-      marginBottom: spacing.md
-    },
     filterRow: {
       flexDirection: "row",
       gap: spacing.sm,
@@ -187,29 +159,6 @@ const createStyles = (colors: {
     filterTextActive: {
       color: colors.text,
       fontFamily: typography.fontFamilyBold
-    },
-    quickCard: {
-      flex: 1,
-      backgroundColor: colors.card,
-      borderRadius: 16,
-      padding: spacing.md,
-      borderWidth: 1,
-      borderColor: colors.border
-    },
-    quickHeader: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: spacing.xs
-    },
-    quickLabel: {
-      fontSize: 12,
-      color: colors.muted
-    },
-    quickValue: {
-      fontSize: 18,
-      fontFamily: typography.fontFamilyBold,
-      color: colors.text,
-      marginTop: spacing.xs
     },
     listContent: {
       paddingBottom: spacing.xl

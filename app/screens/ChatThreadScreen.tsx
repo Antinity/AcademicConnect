@@ -8,10 +8,11 @@ import { RootStackParamList } from "../navigation/types";
 import { useAppStore } from "../store/useAppStore";
 import { spacing } from "../theme/spacing";
 import { useThemeColors } from "../theme/useTheme";
+import { typography } from "../theme/typography";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChatThread">;
 
-export const ChatThreadScreen = ({ route }: Props) => {
+export const ChatThreadScreen = ({ route, navigation }: Props) => {
   const { conversationId } = route.params;
   const [draft, setDraft] = useState("");
   const user = useAppStore((state) => state.user);
@@ -39,6 +40,22 @@ export const ChatThreadScreen = ({ route }: Props) => {
     setDraft("");
   };
 
+  const handleEmoji = () => {
+    setDraft((value) => `${value}🙂`);
+  };
+
+  const handleAttachment = () => {
+    setDraft((value) => `${value}${value ? " " : ""}[Attachment]`);
+  };
+
+  const handleCall = () => {
+    sendMessage(conversationId, "Started a call");
+  };
+
+  const handleVideo = () => {
+    sendMessage(conversationId, "Started a video call");
+  };
+
   const otherId = conversation.participantIds.find((id) => id !== user?.id) || "";
   const title = otherId ? getPersonName(otherId) : "Conversation";
   const initials = title
@@ -56,6 +73,9 @@ export const ChatThreadScreen = ({ route }: Props) => {
       >
         <View style={styles.header}>
           <View style={styles.headerLeft}>
+            <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
+              <Feather name="chevron-left" size={20} color={colors.text} />
+            </Pressable>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>{initials}</Text>
             </View>
@@ -65,8 +85,12 @@ export const ChatThreadScreen = ({ route }: Props) => {
             </View>
           </View>
           <View style={styles.headerRight}>
-            <Feather name="phone" size={16} color={colors.muted} />
-            <Feather name="video" size={16} color={colors.muted} />
+            <Pressable onPress={handleCall} style={styles.headerIcon}>
+              <Feather name="phone" size={16} color={colors.muted} />
+            </Pressable>
+            <Pressable onPress={handleVideo} style={styles.headerIcon}>
+              <Feather name="video" size={16} color={colors.muted} />
+            </Pressable>
           </View>
         </View>
         <FlatList
@@ -83,8 +107,8 @@ export const ChatThreadScreen = ({ route }: Props) => {
           )}
         />
         <View style={styles.inputRow}>
-          <Pressable style={styles.iconButton}>
-            <Feather name="plus" size={16} color={colors.muted} />
+          <Pressable style={styles.iconButton} onPress={handleAttachment}>
+            <Feather name="paperclip" size={16} color={colors.muted} />
           </Pressable>
           <TextInput
             value={draft}
@@ -93,7 +117,7 @@ export const ChatThreadScreen = ({ route }: Props) => {
             placeholderTextColor={colors.muted}
             style={styles.input}
           />
-          <Pressable style={styles.iconButton}>
+          <Pressable style={styles.iconButton} onPress={handleEmoji}>
             <Feather name="smile" size={16} color={colors.muted} />
           </Pressable>
           <Pressable onPress={handleSend} style={styles.sendButton}>
@@ -134,14 +158,31 @@ const createStyles = (colors: {
       alignItems: "center",
       gap: spacing.sm
     },
+    backButton: {
+      width: 32,
+      height: 32,
+      borderRadius: 12,
+      alignItems: "center",
+      justifyContent: "center"
+    },
     headerRight: {
       flexDirection: "row",
       alignItems: "center",
       gap: spacing.md
     },
+    headerIcon: {
+      width: 32,
+      height: 32,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      alignItems: "center",
+      justifyContent: "center"
+    },
     headerTitle: {
       fontSize: 16,
-      color: colors.text
+      color: colors.text,
+      fontFamily: typography.fontFamilyBold
     },
     headerSubtitle: {
       fontSize: 12,

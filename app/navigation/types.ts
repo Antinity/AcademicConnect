@@ -1,5 +1,6 @@
 export type RootStackParamList = {
   Auth: undefined;
+  Onboarding: undefined;
   StudentHome: undefined;
   TeacherHome: undefined;
   SchoolHome: undefined;

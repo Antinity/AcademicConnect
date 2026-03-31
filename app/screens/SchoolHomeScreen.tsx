@@ -113,8 +113,8 @@ const createStyles = (colors: {
       paddingHorizontal: spacing.lg
     },
     header: {
-      paddingTop: spacing.xl,
-      paddingBottom: spacing.md,
+      paddingTop: spacing.lg,
+      paddingBottom: spacing.sm,
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center"

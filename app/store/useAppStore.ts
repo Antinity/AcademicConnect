@@ -1,10 +1,12 @@
 import { create } from "zustand";
 import { conversations, defaultProfilesByRole, people, teachers } from "../data/mockData";
-import { Conversation, Role, Teacher, UserSession } from "../types";
+import { Conversation, OnboardingProfile, Role, Teacher, UserSession } from "../types";
 import { ThemeMode } from "../theme/palettes";
 
 interface AppState {
   user: UserSession | null;
+  isOnboarded: boolean;
+  profile: OnboardingProfile | null;
   teachers: Teacher[];
   conversations: Conversation[];
   people: Record<string, { id: string; name: string; role: Role; headline?: string }>;
@@ -12,6 +14,7 @@ interface AppState {
   login: (name: string, role: Role) => void;
   logout: () => void;
   toggleTheme: () => void;
+  completeOnboarding: (profile: OnboardingProfile) => void;
   startConversation: (participantId: string) => string;
   sendMessage: (conversationId: string, text: string) => void;
   getTeacherById: (id: string) => Teacher | undefined;
@@ -20,6 +23,8 @@ interface AppState {
 
 export const useAppStore = create<AppState>((set, get) => ({
   user: null,
+  isOnboarded: false,
+  profile: null,
   teachers,
   conversations,
   people,
@@ -28,13 +33,37 @@ export const useAppStore = create<AppState>((set, get) => ({
     const profile = defaultProfilesByRole[role];
     const sessionName = name.trim() || profile.name;
     set({
-      user: { id: profile.id, name: sessionName, role }
+      user: { id: profile.id, name: sessionName, role },
+      isOnboarded: false
     });
   },
-  logout: () => set({ user: null }),
+  logout: () => set({ user: null, isOnboarded: false, profile: null }),
   toggleTheme: () => {
     const current = get().themeMode;
     set({ themeMode: current === "dark" ? "light" : "dark" });
+  },
+  completeOnboarding: (profile) => {
+    const { user } = get();
+    if (!user) {
+      return;
+    }
+    set({ isOnboarded: true, profile: { ...profile, role: user.role } });
+    if (user.role === "teacher") {
+      const nextTeachers = get().teachers.map((teacher) => {
+        if (teacher.id !== user.id) {
+          return teacher;
+        }
+        return {
+          ...teacher,
+          name: profile.name || teacher.name,
+          title: profile.headline || teacher.title,
+          subjects: profile.subjects?.length ? profile.subjects : teacher.subjects,
+          hourlyRate: profile.hourlyRate ?? teacher.hourlyRate,
+          bio: profile.bio || teacher.bio
+        };
+      });
+      set({ teachers: nextTeachers });
+    }
   },
   startConversation: (participantId) => {
     const { user } = get();

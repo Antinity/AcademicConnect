@@ -102,8 +102,8 @@ const createStyles = (colors: {
       paddingHorizontal: spacing.lg
     },
     header: {
-      paddingTop: spacing.xl,
-      paddingBottom: spacing.md,
+      paddingTop: spacing.lg,
+      paddingBottom: spacing.sm,
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center"
@@ -119,7 +119,7 @@ const createStyles = (colors: {
       marginTop: spacing.xs
     },
     listContent: {
-      paddingTop: spacing.md,
+      paddingTop: spacing.sm,
       paddingBottom: spacing.xl
     },
     card: {
@@ -127,8 +127,8 @@ const createStyles = (colors: {
       borderRadius: 18,
       borderWidth: 1,
       borderColor: colors.border,
-      padding: spacing.md,
-      marginBottom: spacing.sm
+      padding: spacing.sm,
+      marginBottom: spacing.xs
     },
     pressed: {
       opacity: 0.85
@@ -171,7 +171,7 @@ const createStyles = (colors: {
       color: colors.muted
     },
     preview: {
-      fontSize: 13,
+      fontSize: 12,
       color: colors.muted
     },
     empty: {

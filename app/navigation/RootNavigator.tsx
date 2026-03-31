@@ -10,6 +10,7 @@ import { SchoolHomeScreen } from "../screens/SchoolHomeScreen";
 import { TeacherProfileScreen } from "../screens/TeacherProfileScreen";
 import { ChatListScreen } from "../screens/ChatListScreen";
 import { ChatThreadScreen } from "../screens/ChatThreadScreen";
+import { OnboardingScreen } from "../screens/OnboardingScreen";
 import { useThemeColors } from "../theme/useTheme";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -27,6 +28,7 @@ const getHomeRoute = (role: "student" | "teacher" | "school") => {
 export const RootNavigator = () => {
   const user = useAppStore((state) => state.user);
   const mode = useAppStore((state) => state.themeMode);
+  const isOnboarded = useAppStore((state) => state.isOnboarded);
   const colors = useThemeColors();
 
   return (
@@ -52,6 +54,8 @@ export const RootNavigator = () => {
       >
         {!user ? (
           <Stack.Screen name="Auth" component={AuthScreen} options={{ title: "Welcome" }} />
+        ) : !isOnboarded ? (
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ headerShown: false }} />
         ) : (
           <>
             <Stack.Screen
@@ -70,11 +74,11 @@ export const RootNavigator = () => {
               component={TeacherProfileScreen}
               options={{ title: "Teacher Profile" }}
             />
-            <Stack.Screen name="ChatList" component={ChatListScreen} options={{ title: "Chats" }} />
+            <Stack.Screen name="ChatList" component={ChatListScreen} options={{ headerShown: false }} />
             <Stack.Screen
               name="ChatThread"
               component={ChatThreadScreen}
-              options={{ title: "Conversation" }}
+              options={{ headerShown: false }}
             />
           </>
         )}
