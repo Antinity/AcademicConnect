@@ -1,14 +1,17 @@
 import { create } from "zustand";
 import { conversations, defaultProfilesByRole, people, teachers } from "../data/mockData";
 import { Conversation, Role, Teacher, UserSession } from "../types";
+import { ThemeMode } from "../theme/palettes";
 
 interface AppState {
   user: UserSession | null;
   teachers: Teacher[];
   conversations: Conversation[];
   people: Record<string, { id: string; name: string; role: Role; headline?: string }>;
+  themeMode: ThemeMode;
   login: (name: string, role: Role) => void;
   logout: () => void;
+  toggleTheme: () => void;
   startConversation: (participantId: string) => string;
   sendMessage: (conversationId: string, text: string) => void;
   getTeacherById: (id: string) => Teacher | undefined;
@@ -20,6 +23,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   teachers,
   conversations,
   people,
+  themeMode: "light",
   login: (name, role) => {
     const profile = defaultProfilesByRole[role];
     const sessionName = name.trim() || profile.name;
@@ -28,6 +32,10 @@ export const useAppStore = create<AppState>((set, get) => ({
     });
   },
   logout: () => set({ user: null }),
+  toggleTheme: () => {
+    const current = get().themeMode;
+    set({ themeMode: current === "dark" ? "light" : "dark" });
+  },
   startConversation: (participantId) => {
     const { user } = get();
     if (!user) {

@@ -10,7 +10,7 @@ import { SchoolHomeScreen } from "../screens/SchoolHomeScreen";
 import { TeacherProfileScreen } from "../screens/TeacherProfileScreen";
 import { ChatListScreen } from "../screens/ChatListScreen";
 import { ChatThreadScreen } from "../screens/ChatThreadScreen";
-import { colors } from "../theme/colors";
+import { useThemeColors } from "../theme/useTheme";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -26,9 +26,23 @@ const getHomeRoute = (role: "student" | "teacher" | "school") => {
 
 export const RootNavigator = () => {
   const user = useAppStore((state) => state.user);
+  const mode = useAppStore((state) => state.themeMode);
+  const colors = useThemeColors();
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      theme={{
+        dark: mode === "dark",
+        colors: {
+          background: colors.background,
+          card: colors.surface,
+          primary: colors.primary,
+          text: colors.text,
+          border: colors.border,
+          notification: colors.accent
+        }
+      }}
+    >
       <Stack.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: colors.background },

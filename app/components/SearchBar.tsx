@@ -1,7 +1,8 @@
 import React from "react";
 import { StyleSheet, TextInput, View } from "react-native";
-import { colors } from "../theme/colors";
+import { Feather } from "@expo/vector-icons";
 import { spacing } from "../theme/spacing";
+import { useThemeColors } from "../theme/useTheme";
 
 interface SearchBarProps {
   value: string;
@@ -10,8 +11,12 @@ interface SearchBarProps {
 }
 
 export const SearchBar = ({ value, placeholder, onChangeText }: SearchBarProps) => {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
+
   return (
     <View style={styles.container}>
+      <Feather name="search" size={16} color={colors.muted} />
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -23,18 +28,23 @@ export const SearchBar = ({ value, placeholder, onChangeText }: SearchBarProps) 
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.card,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    marginBottom: spacing.md
-  },
-  input: {
-    fontSize: 14,
-    color: colors.text
-  }
-});
+const createStyles = (colors: { card: string; border: string; text: string }) =>
+  StyleSheet.create({
+    container: {
+      backgroundColor: colors.card,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: colors.border,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      marginBottom: spacing.md,
+      flexDirection: "row",
+      alignItems: "center",
+      gap: spacing.sm
+    },
+    input: {
+      fontSize: 14,
+      color: colors.text,
+      flex: 1
+    }
+  });
