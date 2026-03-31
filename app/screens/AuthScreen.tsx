@@ -1,0 +1,113 @@
+import React, { useState } from "react";
+import { Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
+import { RoleCard } from "../components/RoleCard";
+import { colors } from "../theme/colors";
+import { spacing } from "../theme/spacing";
+import { typography } from "../theme/typography";
+import { Role } from "../types";
+import { useAppStore } from "../store/useAppStore";
+
+export const AuthScreen = () => {
+  const [role, setRole] = useState<Role | null>(null);
+  const [name, setName] = useState("");
+  const login = useAppStore((state) => state.login);
+
+  const handleContinue = () => {
+    if (!role) {
+      return;
+    }
+    login(name, role);
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>AcademicConnect</Text>
+        <Text style={styles.subtitle}>Choose your role to explore the marketplace.</Text>
+      </View>
+      <TextInput
+        value={name}
+        onChangeText={setName}
+        placeholder="Your name"
+        placeholderTextColor={colors.muted}
+        style={styles.input}
+      />
+      <RoleCard
+        role="student"
+        title="Student"
+        description="Browse teachers and book sessions."
+        selected={role === "student"}
+        onPress={() => setRole("student")}
+      />
+      <RoleCard
+        role="teacher"
+        title="Teacher"
+        description="Manage your profile and respond to requests."
+        selected={role === "teacher"}
+        onPress={() => setRole("teacher")}
+      />
+      <RoleCard
+        role="school"
+        title="School"
+        description="Search teachers and build your roster."
+        selected={role === "school"}
+        onPress={() => setRole("school")}
+      />
+      <Pressable
+        onPress={handleContinue}
+        style={({ pressed }) => [styles.button, !role && styles.buttonDisabled, pressed && styles.pressed]}
+        disabled={!role}
+      >
+        <Text style={styles.buttonText}>Continue</Text>
+      </Pressable>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: spacing.lg,
+    backgroundColor: colors.background
+  },
+  header: {
+    marginBottom: spacing.lg
+  },
+  title: {
+    fontSize: 28,
+    fontFamily: typography.fontFamily,
+    color: colors.text,
+    marginBottom: spacing.xs
+  },
+  subtitle: {
+    fontSize: 14,
+    color: colors.muted
+  },
+  input: {
+    backgroundColor: colors.card,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    marginBottom: spacing.md,
+    color: colors.text
+  },
+  button: {
+    marginTop: spacing.sm,
+    backgroundColor: colors.primary,
+    borderRadius: 16,
+    paddingVertical: spacing.md,
+    alignItems: "center"
+  },
+  buttonDisabled: {
+    backgroundColor: "#A0A0A0"
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 16
+  },
+  pressed: {
+    opacity: 0.85
+  }
+});
