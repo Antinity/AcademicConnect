@@ -4,9 +4,9 @@ this repository contains the academicconnect mobile app. the app is built with e
 
 ## prerequisites
 
-install node.js and npm. install expo go on your android phone.
+install node.js and npm. install expo go on your android phone. oh and a cable that has uh that file transferring support, choose file transfer and you might get a prompt with something like DNS on it, just check the never ask again and click on allow.
 
-## run on linux
+## run on linux (for me)
 
 open a terminal in the app folder and run the following commands.
 
@@ -25,7 +25,7 @@ adb reverse tcp:8081 tcp:8081
 
 open expo go and connect to exp://127.0.0.1:8081.
 
-## run on windows
+## run on windows (for lakshya)
 
 open powershell in the app folder and run the following commands.
 
