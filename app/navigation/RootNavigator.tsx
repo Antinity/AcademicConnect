@@ -49,7 +49,8 @@ export const RootNavigator = () => {
         screenOptions={{
           headerStyle: { backgroundColor: colors.background },
           headerShadowVisible: false,
-          headerTitleStyle: { color: colors.text }
+          headerTitleStyle: { color: colors.text },
+          contentStyle: { backgroundColor: colors.background }
         }}
       >
         {!user ? (
