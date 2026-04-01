@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View, ActivityIndicator } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View, ActivityIndicator, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { RoleCard } from "../components/RoleCard";
@@ -53,97 +53,101 @@ export const AuthScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.title}>AcademicConnect</Text>
-          <Text style={styles.subtitle}>{isRegister ? "Create an account to explore." : "Log in to your account."}</Text>
-        </View>
-        <ThemeToggle />
-      </View>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.title}>AcademicConnect</Text>
+              <Text style={styles.subtitle}>{isRegister ? "Create an account to explore." : "Log in to your account."}</Text>
+            </View>
+            <ThemeToggle />
+          </View>
 
-      {isRegister && (
-        <TextInput
-          value={name}
-          onChangeText={setName}
-          placeholder="Your Full Name"
-          placeholderTextColor={colors.muted}
-          style={styles.input}
-        />
-      )}
+          {isRegister && (
+            <TextInput
+              value={name}
+              onChangeText={setName}
+              placeholder="Your Full Name"
+              placeholderTextColor={colors.muted}
+              style={styles.input}
+            />
+          )}
 
-      <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Email Address"
-        autoCapitalize="none"
-        keyboardType="email-address"
-        placeholderTextColor={colors.muted}
-        style={styles.input}
-      />
-
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Password"
-        secureTextEntry
-        placeholderTextColor={colors.muted}
-        style={styles.input}
-      />
-
-      {(localError || authError) ? <Text style={styles.error}>{localError || authError}</Text> : null}
-
-      {isRegister && (
-        <>
-          <Text style={styles.roleLabel}>Select your role:</Text>
-          <RoleCard
-            role="student"
-            title="Student"
-            description="Find the right teacher fast."
-            selected={role === "student"}
-            onPress={() => setRole("student")}
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+            placeholder="Email Address"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            placeholderTextColor={colors.muted}
+            style={styles.input}
           />
-          <RoleCard
-            role="teacher"
-            title="Teacher"
-            description="Share your profile and availability."
-            selected={role === "teacher"}
-            onPress={() => setRole("teacher")}
-          />
-          <RoleCard
-            role="school"
-            title="School"
-            description="Build a reliable teacher roster."
-            selected={role === "school"}
-            onPress={() => setRole("school")}
-          />
-        </>
-      )}
 
-      <Pressable
-        onPress={handleContinue}
-        style={({ pressed }) => [
-          styles.button,
-          (isRegister && !role) && styles.buttonDisabled,
-          loading && styles.buttonDisabled,
-          pressed && styles.pressed
-        ]}
-        disabled={(isRegister && !role) || loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#FFFFFF" />
-        ) : (
-          <>
-            <Text style={styles.buttonText}>{isRegister ? "Sign Up" : "Log In"}</Text>
-            <Feather name="arrow-right" size={16} color="#FFFFFF" />
-          </>
-        )}
-      </Pressable>
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Password"
+            secureTextEntry
+            placeholderTextColor={colors.muted}
+            style={styles.input}
+          />
 
-      <Pressable onPress={toggleMode} style={styles.toggleContainer}>
-        <Text style={styles.toggleText}>
-          {isRegister ? "Already have an account? Log In" : "Don't have an account? Sign Up"}
-        </Text>
-      </Pressable>
+          {(localError || authError) ? <Text style={styles.error}>{localError || authError}</Text> : null}
+
+          {isRegister && (
+            <>
+              <Text style={styles.roleLabel}>Select your role:</Text>
+              <RoleCard
+                role="student"
+                title="Student"
+                description="Find the right teacher fast."
+                selected={role === "student"}
+                onPress={() => setRole("student")}
+              />
+              <RoleCard
+                role="teacher"
+                title="Teacher"
+                description="Share your profile and availability."
+                selected={role === "teacher"}
+                onPress={() => setRole("teacher")}
+              />
+              <RoleCard
+                role="school"
+                title="School"
+                description="Build a reliable teacher roster."
+                selected={role === "school"}
+                onPress={() => setRole("school")}
+              />
+            </>
+          )}
+
+          <Pressable
+            onPress={handleContinue}
+            style={({ pressed }) => [
+              styles.button,
+              (isRegister && !role) && styles.buttonDisabled,
+              loading && styles.buttonDisabled,
+              pressed && styles.pressed
+            ]}
+            disabled={(isRegister && !role) || loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <>
+                <Text style={styles.buttonText}>{isRegister ? "Sign Up" : "Log In"}</Text>
+                <Feather name="arrow-right" size={16} color="#FFFFFF" />
+              </>
+            )}
+          </Pressable>
+
+          <Pressable onPress={toggleMode} style={styles.toggleContainer}>
+            <Text style={styles.toggleText}>
+              {isRegister ? "Already have an account? Log In" : "Don't have an account? Sign Up"}
+            </Text>
+          </Pressable>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -159,8 +163,11 @@ const createStyles = (colors: {
   StyleSheet.create({
     container: {
       flex: 1,
-      padding: spacing.lg,
       backgroundColor: colors.background
+    },
+    scrollContent: {
+      padding: spacing.lg,
+      flexGrow: 1
     },
     header: {
       marginBottom: spacing.lg,
