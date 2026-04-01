@@ -139,12 +139,25 @@ export const useAppStore = create<AppState>((set, get) => ({
   fetchConversations: async () => {
     try {
       const resp = await api.get("/conversations");
-      const apiConvs = resp.data.map((c: any) => ({
-        id: c._id,
-        participantIds: c.participantIds.map((p: any) => p._id || p),
-        messages: get().conversations.find((existing) => existing.id === c._id)?.messages || []
-      }));
-      set({ conversations: apiConvs });
+      const newPeople = { ...get().people };
+      
+      const apiConvs = resp.data.map((c: any) => {
+        const pIds = c.participantIds.map((p: any) => {
+          if (typeof p === "object" && p !== null) {
+            newPeople[p._id] = { id: p._id, name: p.name, role: p.role };
+            return p._id;
+          }
+          return p;
+        });
+        
+        return {
+          id: c._id,
+          participantIds: pIds,
+          messages: get().conversations.find((existing) => existing.id === c._id)?.messages || []
+        };
+      });
+      
+      set({ conversations: apiConvs, people: newPeople });
     } catch (error) {
       console.error("Failed to fetch conversations", error);
     }

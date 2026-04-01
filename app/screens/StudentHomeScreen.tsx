@@ -18,6 +18,8 @@ export const StudentHomeScreen = ({ navigation }: Props) => {
   const teachers = useAppStore((state) => state.teachers);
   const user = useAppStore((state) => state.user);
   const fetchTeachers = useAppStore((state) => state.fetchTeachers);
+  const conversations = useAppStore((state) => state.conversations);
+  const fetchConversations = useAppStore((state) => state.fetchConversations);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const colors = useThemeColors();
@@ -25,7 +27,8 @@ export const StudentHomeScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     fetchTeachers();
-  }, [fetchTeachers]);
+    fetchConversations();
+  }, [fetchTeachers, fetchConversations]);
 
   const filtered = useMemo(() => {
     const normalized = query.toLowerCase();
@@ -57,6 +60,7 @@ export const StudentHomeScreen = ({ navigation }: Props) => {
           <ThemeToggle />
           <Pressable onPress={() => navigation.navigate("ChatList")} style={styles.chatButton}>
             <Feather name="message-circle" size={16} color={colors.text} />
+            {conversations.length > 0 && <View style={styles.redDot} />}
           </Pressable>
         </View>
       </View>
@@ -139,7 +143,17 @@ const createStyles = (colors: {
       borderColor: colors.border,
       flexDirection: "row",
       alignItems: "center",
-      gap: spacing.xs
+      gap: spacing.xs,
+      position: "relative"
+    },
+    redDot: {
+      position: "absolute",
+      top: 6,
+      right: 6,
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: "#EF4444"
     },
     filterRow: {
       flexDirection: "row",

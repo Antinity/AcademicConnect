@@ -63,10 +63,6 @@ export const TeacherProfileScreen = ({ route, navigation }: Props) => {
             </Pressable>
           )}
         </View>
-        <Text style={styles.sectionTitle}>Reviews</Text>
-        {teacher.reviews.map((review) => (
-          <ReviewItem key={review.id} review={review} />
-        ))}
       </ScrollView>
     </SafeAreaView>
   );

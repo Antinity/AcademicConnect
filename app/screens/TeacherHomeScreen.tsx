@@ -8,7 +8,6 @@ import { useAppStore } from "../store/useAppStore";
 import { spacing } from "../theme/spacing";
 import { typography } from "../theme/typography";
 import { RatingStars } from "../components/RatingStars";
-import { ReviewItem } from "../components/ReviewItem";
 import { useThemeColors } from "../theme/useTheme";
 import { ThemeToggle } from "../components/ThemeToggle";
 
@@ -17,13 +16,17 @@ type Props = NativeStackScreenProps<RootStackParamList, "TeacherHome">;
 export const TeacherHomeScreen = ({ navigation }: Props) => {
   const user = useAppStore((state) => state.user);
   const teacher = useAppStore((state) => state.getTeacherById(user?.id || ""));
+  const teachers = useAppStore((state) => state.teachers);
+  const conversations = useAppStore((state) => state.conversations);
   const fetchTeachers = useAppStore((state) => state.fetchTeachers);
+  const fetchConversations = useAppStore((state) => state.fetchConversations);
   const colors = useThemeColors();
   const styles = createStyles(colors);
 
   useEffect(() => {
     fetchTeachers();
-  }, [fetchTeachers]);
+    fetchConversations();
+  }, [fetchTeachers, fetchConversations]);
 
   if (!teacher) {
     return (
@@ -44,19 +47,12 @@ export const TeacherHomeScreen = ({ navigation }: Props) => {
           <ThemeToggle />
           <Pressable onPress={() => navigation.navigate("ChatList")} style={styles.chatButton}>
             <Feather name="message-circle" size={16} color={colors.text} />
+            {conversations.length > 0 && <View style={styles.redDot} />}
           </Pressable>
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.statsRow}>
-          <View style={styles.statCard}>
-            <Text style={styles.statLabel}>Sessions</Text>
-            <Text style={styles.statValue}>14</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statLabel}>Response</Text>
-            <Text style={styles.statValue}>2h</Text>
-          </View>
           <View style={styles.statCard}>
             <Text style={styles.statLabel}>Rating</Text>
             <Text style={styles.statValue}>{teacher.rating.toFixed(1)}</Text>
@@ -68,10 +64,6 @@ export const TeacherHomeScreen = ({ navigation }: Props) => {
           <RatingStars rating={teacher.rating} />
           <Text style={styles.bio}>{teacher.bio}</Text>
         </View>
-        <Text style={styles.sectionTitle}>Recent Reviews</Text>
-        {teacher.reviews.map((review) => (
-          <ReviewItem key={review.id} review={review} />
-        ))}
       </ScrollView>
     </SafeAreaView>
   );
@@ -121,7 +113,17 @@ const createStyles = (colors: {
       borderColor: colors.border,
       flexDirection: "row",
       alignItems: "center",
-      gap: spacing.xs
+      gap: spacing.xs,
+      position: "relative"
+    },
+    redDot: {
+      position: "absolute",
+      top: 6,
+      right: 6,
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: "#EF4444"
     },
     scrollContent: {
       paddingBottom: spacing.xl
