@@ -62,6 +62,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       return true;
     } catch (error: any) {
       set({ authError: error.response?.data?.message || "Authentication failed" });
+      console.error("Authentication error", error);
       return false;
     }
   },

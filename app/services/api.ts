@@ -1,35 +1,37 @@
-import axios from "axios";
 import { getStoredToken } from "./storage";
-import { Platform } from "react-native";
 
-// Use process.env.api if available, otherwise fallback to localhost:5000
-// Note: Android emulator uses 10.0.2.2 to access localhost
-let baseURL = "http://localhost:5000/api";
-if (process.env.api) {
-  baseURL = process.env.api.startsWith("http") ? `${process.env.api}/api` : `http://${process.env.api}/api`;
-} else if (Platform.OS === "android") {
-  baseURL = "http://10.0.2.2:5000/api";
-}
+// Use process.env.EXPO_PUBLIC_API_URL provided by Expo. Fallback is the hardcoded IP.
+const baseURL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.1.7:3000/api";
 
-const api = axios.create({
-  baseURL,
-  headers: {
+const request = async (method: string, endpoint: string, data?: any) => {
+  const token = await getStoredToken();
+  const headers: Record<string, string> = {
     "Content-Type": "application/json"
+  };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
   }
-});
 
-// Add a request interceptor to inject the JWT token
-api.interceptors.request.use(
-  async (config) => {
-    const token = await getStoredToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+  const response = await fetch(`${baseURL}${endpoint}`, {
+    method,
+    headers,
+    body: data ? JSON.stringify(data) : undefined,
+  });
+
+  const responseData = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw { response: { data: responseData, status: response.status } };
   }
-);
+
+  return { data: responseData };
+};
+
+const api = {
+  get: (endpoint: string) => request("GET", endpoint),
+  post: (endpoint: string, data?: any) => request("POST", endpoint, data),
+  put: (endpoint: string, data?: any) => request("PUT", endpoint, data),
+  delete: (endpoint: string) => request("DELETE", endpoint),
+};
 
 export default api;
