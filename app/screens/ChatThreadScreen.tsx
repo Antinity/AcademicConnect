@@ -25,6 +25,10 @@ export const ChatThreadScreen = ({ route, navigation }: Props) => {
 
   useEffect(() => {
     fetchMessages(conversationId);
+    const interval = setInterval(() => {
+      fetchMessages(conversationId);
+    }, 3000);
+    return () => clearInterval(interval);
   }, [fetchMessages, conversationId]);
 
   const conversation = useMemo(

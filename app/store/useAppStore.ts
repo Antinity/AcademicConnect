@@ -176,9 +176,8 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   sendMessage: async (conversationId, text) => {
     try {
-      const resp = await api.post(`/conversations/${conversationId}/messages`, { text });
-      // Currently, components fetch messages themselves, but we could update store here if we keep messages in store.
-      // Easiest is to let components re-fetch after sending.
+      await api.post(`/conversations/${conversationId}/messages`, { text });
+      await get().fetchMessages(conversationId);
     } catch (error) {
       console.error("Failed to send message", error);
     }

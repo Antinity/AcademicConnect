@@ -30,8 +30,8 @@ export const TeacherProfileScreen = ({ route, navigation }: Props) => {
     );
   }
 
-  const handleMessage = () => {
-    const conversationId = startConversation(teacher.id);
+  const handleMessage = async () => {
+    const conversationId = await startConversation(teacher.id);
     if (conversationId) {
       navigation.navigate("ChatThread", { conversationId });
     }
