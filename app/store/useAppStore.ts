@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Conversation, OnboardingProfile, Role, Teacher, UserSession, Review } from "../types";
+import { Conversation, OnboardingProfile, Role, School, Teacher, UserSession, Review } from "../types";
 import { ThemeMode } from "../theme/palettes";
 import api from "../services/api";
 import { setStoredToken, removeStoredToken } from "../services/storage";
@@ -9,6 +9,7 @@ interface AppState {
   isOnboarded: boolean;
   profile: OnboardingProfile | null;
   teachers: Teacher[];
+  schools: School[];
   conversations: Conversation[];
   people: Record<string, { id: string; name: string; role: Role; headline?: string }>;
   themeMode: ThemeMode;
@@ -22,6 +23,7 @@ interface AppState {
   
   // Data Fetching
   fetchTeachers: () => Promise<void>;
+  fetchSchools: () => Promise<void>;
   fetchConversations: () => Promise<void>;
   fetchMessages: (conversationId: string) => Promise<void>;
   
@@ -40,6 +42,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   isOnboarded: false,
   profile: null,
   teachers: [],
+  schools: [],
   conversations: [],
   people: {},
   themeMode: "light",
@@ -82,7 +85,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   logout: async () => {
     await removeStoredToken();
-    set({ user: null, isOnboarded: false, profile: null, teachers: [], conversations: [], people: {} });
+    set({ user: null, isOnboarded: false, profile: null, teachers: [], schools: [], conversations: [], people: {} });
   },
 
   toggleTheme: () => {
@@ -133,6 +136,21 @@ export const useAppStore = create<AppState>((set, get) => ({
       set({ teachers: teachersList, people: peopleMap });
     } catch (error) {
       console.error("Failed to fetch teachers", error);
+    }
+  },
+
+  fetchSchools: async () => {
+    try {
+      const resp = await api.get("/profiles?role=school");
+      const schoolsList: School[] = resp.data.map((p: any) => ({
+        id: p.userId?._id || p.userId,
+        name: p.userId?.name || p.institutionName || "Unknown School",
+        location: p.location || "",
+        hiringFocus: p.hiringFocus || "",
+      }));
+      set({ schools: schoolsList });
+    } catch (error) {
+      console.error("Failed to fetch schools", error);
     }
   },
 

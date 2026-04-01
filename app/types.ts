@@ -19,6 +19,13 @@ export interface Teacher {
   reviews: Review[];
 }
 
+export interface School {
+  id: string;
+  name: string;
+  location: string;
+  hiringFocus: string;
+}
+
 export interface PersonProfile {
   id: string;
   name: string;
