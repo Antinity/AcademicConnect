@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
@@ -9,17 +9,17 @@ import { spacing } from "../theme/spacing";
 import { typography } from "../theme/typography";
 import { RatingStars } from "../components/RatingStars";
 import { useThemeColors } from "../theme/useTheme";
-import { ThemeToggle } from "../components/ThemeToggle";
+import { Sidebar } from "../components/Sidebar";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TeacherHome">;
 
 export const TeacherHomeScreen = ({ navigation }: Props) => {
   const user = useAppStore((state) => state.user);
   const teacher = useAppStore((state) => state.getTeacherById(user?.id || ""));
-  const teachers = useAppStore((state) => state.teachers);
-  const conversations = useAppStore((state) => state.conversations);
   const fetchTeachers = useAppStore((state) => state.fetchTeachers);
+  const conversations = useAppStore((state) => state.conversations);
   const fetchConversations = useAppStore((state) => state.fetchConversations);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const colors = useThemeColors();
   const styles = createStyles(colors);
 
@@ -38,18 +38,23 @@ export const TeacherHomeScreen = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Sidebar
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onNavigate={(route) => navigation.navigate(route)}
+      />
       <View style={styles.header}>
-        <View>
+        <Pressable onPress={() => setSidebarOpen(true)} style={styles.iconButton}>
+          <Feather name="menu" size={16} color={colors.text} />
+        </Pressable>
+        <View style={styles.titleBlock}>
           <Text style={styles.title}>Your Profile</Text>
           <Text style={styles.subtitle}>Keep your availability up to date.</Text>
         </View>
-        <View style={styles.headerActions}>
-          <ThemeToggle />
-          <Pressable onPress={() => navigation.navigate("ChatList")} style={styles.chatButton}>
-            <Feather name="message-circle" size={16} color={colors.text} />
-            {conversations.length > 0 && <View style={styles.redDot} />}
-          </Pressable>
-        </View>
+        <Pressable onPress={() => navigation.navigate("ChatList")} style={styles.iconButton}>
+          <Feather name="message-circle" size={16} color={colors.text} />
+          {conversations.length > 0 && <View style={styles.redDot} />}
+        </Pressable>
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.statsRow}>
@@ -86,13 +91,11 @@ const createStyles = (colors: {
       paddingTop: spacing.lg,
       paddingBottom: spacing.sm,
       flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center"
-    },
-    headerActions: {
-      flexDirection: "row",
       alignItems: "center",
       gap: spacing.sm
+    },
+    titleBlock: {
+      flex: 1,
     },
     title: {
       fontSize: 24,
@@ -104,16 +107,12 @@ const createStyles = (colors: {
       color: colors.muted,
       marginTop: spacing.xs
     },
-    chatButton: {
+    iconButton: {
       backgroundColor: colors.card,
       borderRadius: 14,
-      paddingHorizontal: spacing.sm,
-      paddingVertical: spacing.sm,
+      padding: spacing.sm,
       borderWidth: 1,
       borderColor: colors.border,
-      flexDirection: "row",
-      alignItems: "center",
-      gap: spacing.xs,
       position: "relative"
     },
     redDot: {
@@ -173,11 +172,5 @@ const createStyles = (colors: {
       fontSize: 14,
       color: colors.text,
       marginTop: spacing.md
-    },
-    sectionTitle: {
-      fontSize: 18,
-      fontFamily: typography.fontFamilyBold,
-      color: colors.text,
-      marginBottom: spacing.sm
     }
   });

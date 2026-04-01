@@ -10,7 +10,6 @@ import { typography } from "../theme/typography";
 import { RatingStars } from "../components/RatingStars";
 import { ReviewItem } from "../components/ReviewItem";
 import { useThemeColors } from "../theme/useTheme";
-import { ThemeToggle } from "../components/ThemeToggle";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TeacherProfile">;
 
@@ -42,7 +41,6 @@ export const TeacherProfileScreen = ({ route, navigation }: Props) => {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.headerRow}>
           <Text style={styles.headerLabel}>Profile overview</Text>
-          <ThemeToggle />
         </View>
         <View style={styles.profileCard}>
           <Text style={styles.name}>{teacher.name}</Text>

@@ -9,8 +9,8 @@ import { useAppStore } from "../store/useAppStore";
 import { spacing } from "../theme/spacing";
 import { typography } from "../theme/typography";
 import { useThemeColors } from "../theme/useTheme";
-import { ThemeToggle } from "../components/ThemeToggle";
 import { SearchBar } from "../components/SearchBar";
+import { Sidebar } from "../components/Sidebar";
 
 type Props = NativeStackScreenProps<RootStackParamList, "StudentHome">;
 
@@ -22,6 +22,7 @@ export const StudentHomeScreen = ({ navigation }: Props) => {
   const fetchConversations = useAppStore((state) => state.fetchConversations);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const colors = useThemeColors();
   const styles = createStyles(colors);
 
@@ -40,29 +41,30 @@ export const StudentHomeScreen = ({ navigation }: Props) => {
         )
       );
     }
-    if (filter === "top") {
-      list = [...list].sort((a, b) => b.rating - a.rating);
-    }
-    if (filter === "budget") {
-      list = [...list].sort((a, b) => a.hourlyRate - b.hourlyRate);
-    }
+    if (filter === "top") list = [...list].sort((a, b) => b.rating - a.rating);
+    if (filter === "budget") list = [...list].sort((a, b) => a.hourlyRate - b.hourlyRate);
     return list;
   }, [teachers, query, filter]);
 
   return (
     <SafeAreaView style={styles.container}>
+      <Sidebar
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onNavigate={(route) => navigation.navigate(route)}
+      />
       <View style={styles.header}>
-        <View>
+        <Pressable onPress={() => setSidebarOpen(true)} style={styles.iconButton}>
+          <Feather name="menu" size={16} color={colors.text} />
+        </Pressable>
+        <View style={styles.titleBlock}>
           <Text style={styles.title}>Browse Teachers</Text>
           <Text style={styles.subtitle}>{user ? `Welcome, ${user.name}` : ""}</Text>
         </View>
-        <View style={styles.headerActions}>
-          <ThemeToggle />
-          <Pressable onPress={() => navigation.navigate("ChatList")} style={styles.chatButton}>
-            <Feather name="message-circle" size={16} color={colors.text} />
-            {conversations.length > 0 && <View style={styles.redDot} />}
-          </Pressable>
-        </View>
+        <Pressable onPress={() => navigation.navigate("ChatList")} style={styles.iconButton}>
+          <Feather name="message-circle" size={16} color={colors.text} />
+          {conversations.length > 0 && <View style={styles.redDot} />}
+        </Pressable>
       </View>
       <SearchBar value={query} onChangeText={setQuery} placeholder="Search teachers or subjects" />
       <View style={styles.filterRow}>
@@ -116,13 +118,11 @@ const createStyles = (colors: {
       paddingTop: spacing.lg,
       paddingBottom: spacing.sm,
       flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center"
-    },
-    headerActions: {
-      flexDirection: "row",
       alignItems: "center",
       gap: spacing.sm
+    },
+    titleBlock: {
+      flex: 1,
     },
     title: {
       fontSize: 24,
@@ -134,16 +134,12 @@ const createStyles = (colors: {
       color: colors.muted,
       marginTop: spacing.xs
     },
-    chatButton: {
+    iconButton: {
       backgroundColor: colors.card,
       borderRadius: 14,
-      paddingHorizontal: spacing.sm,
-      paddingVertical: spacing.sm,
+      padding: spacing.sm,
       borderWidth: 1,
       borderColor: colors.border,
-      flexDirection: "row",
-      alignItems: "center",
-      gap: spacing.xs,
       position: "relative"
     },
     redDot: {

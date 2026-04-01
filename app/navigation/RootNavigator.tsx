@@ -11,19 +11,11 @@ import { TeacherProfileScreen } from "../screens/TeacherProfileScreen";
 import { ChatListScreen } from "../screens/ChatListScreen";
 import { ChatThreadScreen } from "../screens/ChatThreadScreen";
 import { OnboardingScreen } from "../screens/OnboardingScreen";
+import { EditProfileScreen } from "../screens/EditProfileScreen";
+import { AppSettingsScreen } from "../screens/AppSettingsScreen";
 import { useThemeColors } from "../theme/useTheme";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
-const getHomeRoute = (role: "student" | "teacher" | "school") => {
-  if (role === "teacher") {
-    return "TeacherHome" as const;
-  }
-  if (role === "school") {
-    return "SchoolHome" as const;
-  }
-  return "StudentHome" as const;
-};
 
 export const RootNavigator = () => {
   const user = useAppStore((state) => state.user);
@@ -59,28 +51,20 @@ export const RootNavigator = () => {
           <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ headerShown: false }} />
         ) : (
           <>
-            <Stack.Screen
-              name={getHomeRoute(user.role)}
-              component={
-                user.role === "teacher"
-                  ? TeacherHomeScreen
-                  : user.role === "school"
-                    ? SchoolHomeScreen
-                    : StudentHomeScreen
-              }
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="TeacherProfile"
-              component={TeacherProfileScreen}
-              options={{ title: "Teacher Profile" }}
-            />
+            {user.role === "teacher" && (
+              <Stack.Screen name="TeacherHome" component={TeacherHomeScreen} options={{ headerShown: false }} />
+            )}
+            {user.role === "school" && (
+              <Stack.Screen name="SchoolHome" component={SchoolHomeScreen} options={{ headerShown: false }} />
+            )}
+            {user.role === "student" && (
+              <Stack.Screen name="StudentHome" component={StudentHomeScreen} options={{ headerShown: false }} />
+            )}
+            <Stack.Screen name="TeacherProfile" component={TeacherProfileScreen} options={{ title: "Teacher Profile" }} />
             <Stack.Screen name="ChatList" component={ChatListScreen} options={{ headerShown: false }} />
-            <Stack.Screen
-              name="ChatThread"
-              component={ChatThreadScreen}
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="ChatThread" component={ChatThreadScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="AppSettings" component={AppSettingsScreen} options={{ headerShown: false }} />
           </>
         )}
       </Stack.Navigator>

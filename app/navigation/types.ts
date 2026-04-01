@@ -7,4 +7,6 @@ export type RootStackParamList = {
   TeacherProfile: { teacherId: string };
   ChatList: undefined;
   ChatThread: { conversationId: string };
+  EditProfile: undefined;
+  AppSettings: undefined;
 };

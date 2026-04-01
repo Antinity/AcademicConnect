@@ -8,7 +8,6 @@ import { useAppStore } from "../store/useAppStore";
 import { spacing } from "../theme/spacing";
 import { useThemeColors } from "../theme/useTheme";
 import { typography } from "../theme/typography";
-import { ThemeToggle } from "../components/ThemeToggle";
 import { SearchBar } from "../components/SearchBar";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChatList">;
@@ -45,7 +44,6 @@ export const ChatListScreen = ({ navigation }: Props) => {
           <Text style={styles.title}>Messages</Text>
           <Text style={styles.subtitle}>Stay in sync with your network.</Text>
         </View>
-        <ThemeToggle />
       </View>
       <SearchBar value={query} onChangeText={setQuery} placeholder="Search conversations" />
       <FlatList

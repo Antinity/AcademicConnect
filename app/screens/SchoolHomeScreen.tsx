@@ -10,7 +10,7 @@ import { useAppStore } from "../store/useAppStore";
 import { spacing } from "../theme/spacing";
 import { typography } from "../theme/typography";
 import { useThemeColors } from "../theme/useTheme";
-import { ThemeToggle } from "../components/ThemeToggle";
+import { Sidebar } from "../components/Sidebar";
 
 type Props = NativeStackScreenProps<RootStackParamList, "SchoolHome">;
 
@@ -22,6 +22,7 @@ export const SchoolHomeScreen = ({ navigation }: Props) => {
   const fetchConversations = useAppStore((state) => state.fetchConversations);
   const [query, setQuery] = useState("");
   const [segment, setSegment] = useState("all");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const colors = useThemeColors();
   const styles = createStyles(colors);
 
@@ -32,45 +33,53 @@ export const SchoolHomeScreen = ({ navigation }: Props) => {
 
   const filtered = useMemo(() => {
     const normalized = query.toLowerCase();
-    if (!normalized) {
-      return teachers;
-    }
-    return teachers.filter((teacher) => {
-      return (
+    if (!normalized) return teachers;
+    return teachers.filter(
+      (teacher) =>
         teacher.name.toLowerCase().includes(normalized) ||
         teacher.subjects.some((subject) => subject.toLowerCase().includes(normalized))
-      );
-    });
+    );
   }, [query, teachers]);
 
   const segmented = useMemo(() => {
-    if (segment === "stem") {
+    if (segment === "stem")
       return filtered.filter((teacher) =>
-        teacher.subjects.some((subject) => ["math", "physics", "chemistry", "computer"].some((term) => subject.toLowerCase().includes(term)))
+        teacher.subjects.some((subject) =>
+          ["math", "physics", "chemistry", "computer"].some((term) =>
+            subject.toLowerCase().includes(term)
+          )
+        )
       );
-    }
-    if (segment === "humanities") {
+    if (segment === "humanities")
       return filtered.filter((teacher) =>
-        teacher.subjects.some((subject) => ["writing", "literature", "history"].some((term) => subject.toLowerCase().includes(term)))
+        teacher.subjects.some((subject) =>
+          ["writing", "literature", "history"].some((term) =>
+            subject.toLowerCase().includes(term)
+          )
+        )
       );
-    }
     return filtered;
   }, [filtered, segment]);
 
   return (
     <SafeAreaView style={styles.container}>
+      <Sidebar
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onNavigate={(route) => navigation.navigate(route)}
+      />
       <View style={styles.header}>
-        <View>
+        <Pressable onPress={() => setSidebarOpen(true)} style={styles.iconButton}>
+          <Feather name="menu" size={16} color={colors.text} />
+        </Pressable>
+        <View style={styles.titleBlock}>
           <Text style={styles.title}>Find Teachers</Text>
           <Text style={styles.subtitle}>{user ? `Hi ${user.name}` : ""}</Text>
         </View>
-        <View style={styles.headerActions}>
-          <ThemeToggle />
-          <Pressable onPress={() => navigation.navigate("ChatList")} style={styles.chatButton}>
-            <Feather name="message-circle" size={16} color={colors.text} />
-            {conversations.length > 0 && <View style={styles.redDot} />}
-          </Pressable>
-        </View>
+        <Pressable onPress={() => navigation.navigate("ChatList")} style={styles.iconButton}>
+          <Feather name="message-circle" size={16} color={colors.text} />
+          {conversations.length > 0 && <View style={styles.redDot} />}
+        </Pressable>
       </View>
       <SearchBar value={query} onChangeText={setQuery} placeholder="Search by subject or name" />
       <View style={styles.filterRow}>
@@ -125,13 +134,11 @@ const createStyles = (colors: {
       paddingTop: spacing.lg,
       paddingBottom: spacing.sm,
       flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center"
-    },
-    headerActions: {
-      flexDirection: "row",
       alignItems: "center",
       gap: spacing.sm
+    },
+    titleBlock: {
+      flex: 1,
     },
     title: {
       fontSize: 24,
@@ -143,16 +150,12 @@ const createStyles = (colors: {
       color: colors.muted,
       marginTop: spacing.xs
     },
-    chatButton: {
+    iconButton: {
       backgroundColor: colors.card,
       borderRadius: 14,
-      paddingHorizontal: spacing.sm,
-      paddingVertical: spacing.sm,
+      padding: spacing.sm,
       borderWidth: 1,
       borderColor: colors.border,
-      flexDirection: "row",
-      alignItems: "center",
-      gap: spacing.xs,
       position: "relative"
     },
     redDot: {
