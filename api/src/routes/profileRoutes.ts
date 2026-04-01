@@ -44,6 +44,12 @@ router.put("/", authMiddleware, async (req, res) => {
     const { userId } = (req as any).user;
     const updateData = req.body;
 
+    // Update user's name if provided
+    if (updateData.name) {
+      const User = (await import("../models/User.js")).default;
+      await User.findByIdAndUpdate(userId, { name: updateData.name });
+    }
+
     let profile = await Profile.findOne({ userId });
     
     if (profile) {

@@ -9,6 +9,10 @@ export interface IProfile extends Document {
   hourlyRate?: number;
   rating?: number;
   title?: string;
+  gradeLevel?: string;
+  goals?: string;
+  institutionName?: string;
+  hiringFocus?: string;
 }
 
 const ProfileSchema: Schema = new Schema(
@@ -21,6 +25,10 @@ const ProfileSchema: Schema = new Schema(
     hourlyRate: { type: Number },
     rating: { type: Number, default: 0 },
     title: { type: String },
+    gradeLevel: { type: String },
+    goals: { type: String },
+    institutionName: { type: String },
+    hiringFocus: { type: String },
   },
   { timestamps: true }
 );

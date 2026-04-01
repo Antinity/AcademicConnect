@@ -55,9 +55,22 @@ export const useAppStore = create<AppState>((set, get) => ({
       const { user, token } = response.data;
       
       await setStoredToken(token);
+      let isUserOnboarded = false;
+      let userProfile = null;
+      try {
+        const profileResp = await api.get(`/profiles/${user.id || user._id}`);
+        if (profileResp.data) {
+          isUserOnboarded = true;
+          userProfile = profileResp.data;
+        }
+      } catch (e) {
+        // Profile not found or not onboarded yet
+      }
+
       set({
         user: { id: user.id || user._id, name: user.name, role: user.role },
-        isOnboarded: false // Simplified: always show onboarding or default
+        isOnboarded: isUserOnboarded,
+        profile: userProfile
       });
       return true;
     } catch (error: any) {

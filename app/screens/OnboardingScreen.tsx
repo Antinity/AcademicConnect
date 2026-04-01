@@ -9,20 +9,21 @@ import { useThemeColors } from "../theme/useTheme";
 
 export const OnboardingScreen = () => {
   const user = useAppStore((state) => state.user);
+  const profile = useAppStore((state) => state.profile);
   const completeOnboarding = useAppStore((state) => state.completeOnboarding);
   const colors = useThemeColors();
   const styles = createStyles(colors);
 
   const [name, setName] = useState(user?.name || "");
-  const [headline, setHeadline] = useState("");
-  const [location, setLocation] = useState("");
-  const [bio, setBio] = useState("");
-  const [subjects, setSubjects] = useState("");
-  const [hourlyRate, setHourlyRate] = useState("");
-  const [gradeLevel, setGradeLevel] = useState("");
-  const [goals, setGoals] = useState("");
-  const [institutionName, setInstitutionName] = useState("");
-  const [hiringFocus, setHiringFocus] = useState("");
+  const [headline, setHeadline] = useState(profile?.headline || "");
+  const [location, setLocation] = useState(profile?.location || "");
+  const [bio, setBio] = useState(profile?.bio || "");
+  const [subjects, setSubjects] = useState(profile?.subjects?.join(", ") || "");
+  const [hourlyRate, setHourlyRate] = useState(profile?.hourlyRate?.toString() || "");
+  const [gradeLevel, setGradeLevel] = useState(profile?.gradeLevel || "");
+  const [goals, setGoals] = useState(profile?.goals || "");
+  const [institutionName, setInstitutionName] = useState(profile?.institutionName || "");
+  const [hiringFocus, setHiringFocus] = useState(profile?.hiringFocus || "");
   const [error, setError] = useState("");
 
   const role = user?.role || "student";
