@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
@@ -19,8 +19,13 @@ export const ChatThreadScreen = ({ route, navigation }: Props) => {
   const conversations = useAppStore((state) => state.conversations);
   const sendMessage = useAppStore((state) => state.sendMessage);
   const getPersonName = useAppStore((state) => state.getPersonName);
+  const fetchMessages = useAppStore((state) => state.fetchMessages);
   const colors = useThemeColors();
   const styles = createStyles(colors);
+
+  useEffect(() => {
+    fetchMessages(conversationId);
+  }, [fetchMessages, conversationId]);
 
   const conversation = useMemo(
     () => conversations.find((conv) => conv.id === conversationId),

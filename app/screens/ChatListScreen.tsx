@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
@@ -17,9 +17,14 @@ export const ChatListScreen = ({ navigation }: Props) => {
   const conversations = useAppStore((state) => state.conversations);
   const user = useAppStore((state) => state.user);
   const getPersonName = useAppStore((state) => state.getPersonName);
+  const fetchConversations = useAppStore((state) => state.fetchConversations);
   const [query, setQuery] = useState("");
   const colors = useThemeColors();
   const styles = createStyles(colors);
+
+  useEffect(() => {
+    fetchConversations();
+  }, [fetchConversations]);
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();

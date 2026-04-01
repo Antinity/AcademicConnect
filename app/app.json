@@ -4,10 +4,15 @@
     "slug": "academicconnect",
     "version": "1.0.0",
     "orientation": "portrait",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
-    "android": {}
+    "android": {},
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }

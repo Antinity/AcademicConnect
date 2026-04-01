@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
@@ -17,8 +17,13 @@ type Props = NativeStackScreenProps<RootStackParamList, "TeacherHome">;
 export const TeacherHomeScreen = ({ navigation }: Props) => {
   const user = useAppStore((state) => state.user);
   const teacher = useAppStore((state) => state.getTeacherById(user?.id || ""));
+  const fetchTeachers = useAppStore((state) => state.fetchTeachers);
   const colors = useThemeColors();
   const styles = createStyles(colors);
+
+  useEffect(() => {
+    fetchTeachers();
+  }, [fetchTeachers]);
 
   if (!teacher) {
     return (

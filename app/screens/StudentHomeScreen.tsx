@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
@@ -17,10 +17,15 @@ type Props = NativeStackScreenProps<RootStackParamList, "StudentHome">;
 export const StudentHomeScreen = ({ navigation }: Props) => {
   const teachers = useAppStore((state) => state.teachers);
   const user = useAppStore((state) => state.user);
+  const fetchTeachers = useAppStore((state) => state.fetchTeachers);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const colors = useThemeColors();
   const styles = createStyles(colors);
+
+  useEffect(() => {
+    fetchTeachers();
+  }, [fetchTeachers]);
 
   const filtered = useMemo(() => {
     const normalized = query.toLowerCase();
