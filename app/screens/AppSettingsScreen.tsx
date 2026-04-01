@@ -2,6 +2,13 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  interpolateColor,
+  useDerivedValue,
+} from "react-native-reanimated";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
 import { useAppStore } from "../store/useAppStore";
@@ -11,6 +18,11 @@ import { useThemeColors } from "../theme/useTheme";
 
 type Props = NativeStackScreenProps<RootStackParamList, "AppSettings">;
 
+const THUMB_SIZE = 22;
+const PILL_PADDING = 3;
+const PILL_WIDTH = 52;
+const THUMB_TRAVEL = PILL_WIDTH - THUMB_SIZE - PILL_PADDING * 2;
+
 export const AppSettingsScreen = ({ navigation }: Props) => {
   const themeMode = useAppStore((state) => state.themeMode);
   const toggleTheme = useAppStore((state) => state.toggleTheme);
@@ -18,6 +30,42 @@ export const AppSettingsScreen = ({ navigation }: Props) => {
   const styles = createStyles(colors);
 
   const isDark = themeMode === "dark";
+
+  // 0 = light, 1 = dark
+  const progress = useSharedValue(isDark ? 1 : 0);
+
+  // Keep in sync with store
+  React.useEffect(() => {
+    progress.value = withSpring(isDark ? 1 : 0, { damping: 16, stiffness: 200 });
+  }, [isDark, progress]);
+
+  const thumbStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateX: withSpring(progress.value * THUMB_TRAVEL, {
+          damping: 16,
+          stiffness: 200,
+        }),
+      },
+    ],
+  }));
+
+  const pillBgStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      progress.value,
+      [0, 1],
+      [colors.chip, colors.primary]
+    ),
+    borderColor: interpolateColor(
+      progress.value,
+      [0, 1],
+      [colors.border, colors.primary]
+    ),
+  }));
+
+  const handleToggle = () => {
+    toggleTheme();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,13 +88,12 @@ export const AppSettingsScreen = ({ navigation }: Props) => {
             <Text style={styles.settingLabel}>Theme</Text>
             <Text style={styles.settingValue}>{isDark ? "Dark" : "Light"} mode</Text>
           </View>
-          {/* Toggle pill */}
-          <Pressable
-            onPress={toggleTheme}
-            style={[styles.pill, isDark && styles.pillActive]}
-            hitSlop={8}
-          >
-            <View style={[styles.pillThumb, isDark && styles.pillThumbActive]} />
+
+          {/* Animated pill toggle */}
+          <Pressable onPress={handleToggle} hitSlop={8}>
+            <Animated.View style={[styles.pill, pillBgStyle]}>
+              <Animated.View style={[styles.thumb, thumbStyle]} />
+            </Animated.View>
           </Pressable>
         </View>
       </View>
@@ -130,31 +177,22 @@ const createStyles = (colors: {
       marginTop: 2,
     },
     pill: {
-      width: 48,
-      height: 28,
-      borderRadius: 14,
-      backgroundColor: colors.chip,
+      width: PILL_WIDTH,
+      height: THUMB_SIZE + PILL_PADDING * 2,
+      borderRadius: (THUMB_SIZE + PILL_PADDING * 2) / 2,
       borderWidth: 1,
-      borderColor: colors.border,
+      paddingHorizontal: PILL_PADDING,
       justifyContent: "center",
-      paddingHorizontal: 3,
     },
-    pillActive: {
-      backgroundColor: colors.primary,
-      borderColor: colors.primary,
-    },
-    pillThumb: {
-      width: 20,
-      height: 20,
-      borderRadius: 10,
-      backgroundColor: "#fff",
+    thumb: {
+      width: THUMB_SIZE,
+      height: THUMB_SIZE,
+      borderRadius: THUMB_SIZE / 2,
+      backgroundColor: "#FFFFFF",
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.15,
+      shadowOpacity: 0.18,
       shadowRadius: 2,
-      elevation: 2,
-    },
-    pillThumbActive: {
-      alignSelf: "flex-end",
+      elevation: 3,
     },
   });
