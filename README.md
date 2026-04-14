@@ -1,5 +1,8 @@
 # academicconnect
 
+> [!NOTE]  
+> This is not the final app but rather the demo requested by a client.
+
 this repository contains the academicconnect mobile app. the app is built with expo and react native and runs locally without a backend.
 
 ## prerequisites
